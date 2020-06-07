@@ -25,3 +25,14 @@
 .product__description {
     text-align: center;
 }
+
+.btn.danger {
+    color: red;
+    border-color: red;
+  }
+   
+  .btn.danger:hover,
+  .btn.danger:active {
+    background: red;
+    color: white;
+  }
