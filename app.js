@@ -4,13 +4,13 @@ const express = require('express')
 const bodyParser = require('body-parser')
 
 const errorController = require('./controllers/error')
-const mongoConnect = require('./helpers/database')
+const mongoConnect = require('./helpers/database').mongoConnect
 
 const app = express()
 
 app.set('view engine', 'ejs')
 
-// const adminRoutes = require('./routes/admin')
+const adminRoutes = require('./routes/admin')
 // const shopRoutes = require('./routes/shop')
 
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -24,12 +24,11 @@ app.use((req, res, next) => {
 //     .catch((err) => console.log(err))
 })
 
-// app.use('/admin', adminRoutes)
+app.use('/admin', adminRoutes)
 // app.use(shopRoutes)
 
 app.use(errorController.get404)
 
-mongoConnect(client => {
-  console.log(client)
+mongoConnect(() => {
   app.listen(3000)
 })
