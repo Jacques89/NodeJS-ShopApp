@@ -16,8 +16,8 @@ router.get('/products/:productId', shopController.getProduct)
 
 // router.get('/orders',shopController.getOrders)
 
-// // POST-Requests
-// router.post('/cart', shopController.postCart)
+// POST-Requests
+router.post('/cart', shopController.postCart)
 
 // router.post('/cart-delete-item', shopController.postCartDeleteProduct)
 

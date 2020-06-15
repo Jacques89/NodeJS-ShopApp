@@ -16,10 +16,11 @@ const shopRoutes = require('./routes/shop')
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(path.join(__dirname, 'public')))
+
 app.use((req, res, next) => {
   User.findById("5ee6523919c7518224914a78")
     .then((user) => {
-      req.user = user
+      req.user = new User(user.name, user.email, user.cart, user._id)
       next()
     })
     .catch((err) => console.log(err))

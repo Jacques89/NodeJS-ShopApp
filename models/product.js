@@ -1,5 +1,4 @@
 const mongodb = require('mongodb')
-const { use } = require('../routes/shop')
 const getDb = require('../helpers/database').getDb
 
 class Product {
@@ -15,8 +14,8 @@ class Product {
   save() {
 		const db = getDb()
 		let dbOperation 
-		if (this._id ) {
-			dbOperation = db.collection('products').update({ _id: this._id }, { $set: this })
+		if (this._id) {
+			dbOperation = db.collection('products').updateOne({ _id: this._id }, { $set: this })
 		} else {
 			dbOperation = db.collection('products').insertOne(this)
 		}
