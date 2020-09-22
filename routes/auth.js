@@ -14,11 +14,13 @@ router.post(
   '/login', 
   body('email')
     .isEmail()
-    .withMessage('Please enter a valid email'), 
+    .withMessage('Please enter a valid email')
+    .normalizeEmail(), 
   body('password')
     .isLength({ min: 5 })
     .withMessage('Please enter a valid password')
-    .isAlphanumeric(),
+    .isAlphanumeric()
+    .trim(),
   authController.postLogin)
 
 router.post(
@@ -35,12 +37,16 @@ router.post(
         return Promise.reject('E-mail already exists')
       }
     })
-  }),
+  })
+  .normalizeEmail(),
+
   body('password')
     .isLength({min: 5})
     .withMessage('Please enter a valid password with 5 characters minimum')
-    .isAlphanumeric(),
+    .isAlphanumeric()
+    .trim(),
   body('confirmPassword')
+    .trim()
     .custom((value, { req }) => {
       if (value !== req.body.password) {
         throw new Error ('Passwords must match')
