@@ -16,13 +16,16 @@ router.post(
   '/add-product', 
   [
     body('title')
-      .isAlphanumeric()
+      .isString()
       .isLength({ min: 3 })
+      .withMessage('Please enter a title')
       .trim(),
     body('imageUrl')
-      .isURL(),
+      .isURL()
+      .withMessage('Please enter a valid URL'),
     body('price')
-      .isFloat(),
+      .isFloat()
+      .withMessage('Please enter a price'),
     body('description')
       .isLength({ min: 5, max: 400 })
       .trim(),
@@ -44,11 +47,14 @@ router.post(
     body('title')
       .isString()
       .isLength({ min: 3 })
+      .withMessage('Please enter a title')
       .trim(),
     body('imageUrl')
-      .isURL(),
+      .isURL()
+      .withMessage('Please enter a valid URL'),
     body('price')
-      .isFloat(),
+      .isFloat()
+      .withMessage('Please enter a price'),
     body('description')
       .isLength({ min: 5, max: 400 })
       .trim(),
