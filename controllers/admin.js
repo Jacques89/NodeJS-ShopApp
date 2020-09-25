@@ -1,5 +1,8 @@
 const { validationResult } = require('express-validator')
 
+const fileHelper = require('../helpers/file')
+const product = require('../models/product')
+
 const Product = require('../models/product')
 
 exports.getAddProduct = (req, res, next) => {
@@ -66,16 +69,16 @@ exports.postAddProduct = (req, res, next) => {
     userId: req.user
   })
   product
-    .save()
-    .then(result => {
-      console.log('Created Product')
-      res.redirect('/admin/products')
-    })
-    .catch(err => {
-      const error = new Error('err')
-      error.httpStatusCode = 500
-      return next(error)
-    })
+  .save()
+  .then(result => {
+    console.log('Created Product')
+    res.redirect('/admin/products')
+  })
+  .catch(err => {
+    const error = new Error('err')
+    error.httpStatusCode = 500
+    return next(error)
+  })
 }
 
 exports.getEditProduct = (req, res, next) => {
@@ -85,25 +88,25 @@ exports.getEditProduct = (req, res, next) => {
   }
   const prodId = req.params.productId
   Product.findById(prodId)
-    .then(product => {
-      if (!product) {
-        return res.redirect('/')
-      }
-      res.render('admin/edit-product', {
-        pageTitle: 'Edit Product',
-        path: '/admin/edit-product',
-        editing: editMode,
-        product: product,
-        hasError: false,
-        errorMessage: null,
-        validationErrors: []
-      })
+  .then(product => {
+    if (!product) {
+      return res.redirect('/')
+    }
+    res.render('admin/edit-product', {
+      pageTitle: 'Edit Product',
+      path: '/admin/edit-product',
+      editing: editMode,
+      product: product,
+      hasError: false,
+      errorMessage: null,
+      validationErrors: []
     })
-    .catch(err => {
-      const error = new Error('err')
-      error.httpStatusCode = 500
-      return next(error)
-    })
+  })
+  .catch(err => {
+    const error = new Error('err')
+    error.httpStatusCode = 500
+    return next(error)
+  })
 }
 
 exports.postEditProduct = (req, res, next) => {
@@ -143,6 +146,7 @@ exports.postEditProduct = (req, res, next) => {
     product.description = updatedDescription
 
     if (image) {
+      fileHelper.deleteFile(product.imageUrl)
       product.imageUrl = image.path
     } 
     return product.save()
@@ -162,33 +166,40 @@ exports.getProducts = (req, res, next) => {
   Product.find({
     userId: req.user._id
   })
-    .then(products => {
-      res.render('admin/products', {
-        prods: products,
-        pageTitle: 'Admin Products',
-        path: '/admin/products'
-      })
+  .then(products => {
+    res.render('admin/products', {
+      prods: products,
+      pageTitle: 'Admin Products',
+      path: '/admin/products'
     })
-    .catch(err => {
-      const error = new Error('err')
-      error.httpStatusCode = 500
-      return next(error)
-    })
+  })
+  .catch(err => {
+    const error = new Error('err')
+    error.httpStatusCode = 500
+    return next(error)
+  })
 }
 
 exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId
-  Product.deleteOne({
-    _id: prodId,
-    userId: req.user._id
+  Product.findById(prodId)
+  .then(product => {
+    if (!product) {
+      return next(new Error('Product not found!'))
+    }
+    fileHelper.deleteFile(product.imageUrl)
+    return Product.deleteOne({
+      _id: prodId,
+      userId: req.user._id
+    })
   })
-    .then(() => {
-      console.log('Destroyed Product')
-      res.redirect('/admin/products')
-    })
-    .catch(err => {
-      const error = new Error('err')
-      error.httpStatusCode = 500
-      return next(error)
-    })
+  .then(() => {
+    console.log('Destroyed Product')
+    res.redirect('/admin/products')
+  })
+  .catch(err => {
+    const error = new Error('err')
+    error.httpStatusCode = 500
+    return next(error)
+  })
 }
