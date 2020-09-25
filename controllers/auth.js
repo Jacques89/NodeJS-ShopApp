@@ -140,30 +140,31 @@ exports.postSignup = (req, res, next) => {
       validationErrors: errors.array()
     })
   }
+  
   bcrypt
-    .hash(password, 12)
-    .then(hashedPassword => {
-      const user = new User({
-        email: email,
-        password: hashedPassword,
-        cart: { items: [] }
-      })
-      return user.save()
+  .hash(password, 12)
+  .then(hashedPassword => {
+    const user = new User({
+      email: email,
+      password: hashedPassword,
+      cart: { items: [] }
     })
-    .then(result => {
-      res.redirect('/login')
-      return mg.sendMail({
-        from: 'shop@jacques.com',
-        to: email,
-        subject: 'Signup succeeded',
-        text: 'Welcome, You successfully signed up!'
-      })
+    return user.save()
+  })
+  .then(result => {
+    res.redirect('/login')
+    return mg.sendMail({
+      from: 'shop@jacques.com',
+      to: email,
+      subject: 'Signup succeeded',
+      text: 'Welcome, You successfully signed up!'
     })
-    .catch(err => {
-      const error = new Error('err')
-      error.httpStatusCode = 500
-      return next(error)
-    })
+  })
+  .catch(err => {
+    const error = new Error('err')
+    error.httpStatusCode = 500
+    return next(error)
+  })
 }
 
 exports.postLogout = (req, res, next) => {
