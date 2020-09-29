@@ -6,26 +6,42 @@ const isAuth = require('../middleware/is-auth')
 
 const router = express.Router()
 
-// GET-REQUESTS
+/**
+ * INDEX
+ */
 router.get('/', shopController.getIndex)
 
+/**
+ * PRODUCTS
+ */
 router.get('/products', shopController.getProducts)
 
 router.get('/products/:productId', shopController.getProduct)
 
+/**
+ * CART
+ */
 router.get('/cart', isAuth, shopController.getCart)
 
-router.get('/orders', isAuth, shopController.getOrders)
-
-router.get('/orders/:orderId', isAuth, shopController.getInvoice)
-
-router.get('/checkout', isAuth, shopController.getCheckout)
-
-// POST-Requests
 router.post('/cart', isAuth, shopController.postCart)
 
 router.post('/cart-delete-item', isAuth, shopController.postCartDeleteProduct)
 
-router.post('/create-order', isAuth, shopController.postOrder)
+/**
+ * ORDERS
+ */
+router.get('/orders', isAuth, shopController.getOrders)
+
+router.get('/orders/:orderId', isAuth, shopController.getInvoice)
+
+
+/**
+ * CHECKOUT
+ */
+router.get('/checkout', isAuth, shopController.getCheckout)
+
+router.get('/checkout/success', shopController.getCheckoutSuccess)
+
+router.get('/checkout/cancel', shopController.getCheckout)
 
 module.exports = router
