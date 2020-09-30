@@ -6,9 +6,10 @@ const User = require('../models/user')
 
 const router = express.Router()
 
+/**
+ * LOGIN
+ */
 router.get('/login', authController.getLogin)
-
-router.get('/signup', authController.getSignup)
 
 router.post(
   '/login', 
@@ -21,7 +22,16 @@ router.post(
     .withMessage('Please enter a valid password')
     .isAlphanumeric()
     .trim(),
-  authController.postLogin)
+  authController.postLogin
+)
+
+router.post('/logout', authController.postLogout)
+
+/**
+ * SIGNUP
+ */
+
+router.get('/signup', authController.getSignup)
 
 router.post(
   '/signup', 
@@ -56,11 +66,17 @@ router.post(
   authController.postSignup
 )
 
-router.post('/logout', authController.postLogout)
+/**
+ * RESET
+ */
 
 router.get('/reset', authController.getReset)
 
 router.post('/reset', authController.postReset)
+
+/**
+ * NEW PASSWORD
+ */
 
 router.get('/reset/:token', authController.getNewPassword)
 

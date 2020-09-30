@@ -8,10 +8,11 @@ const isAuth = require('../middleware/is-auth')
 
 const router = express.Router()
 
-// /admin/add-product => GET
+/**
+ * ADD PRODUCT
+ */
 router.get('/add-product', isAuth, adminController.getAddProduct)
 
-// /admin/add-product => POST
 router.post(
   '/add-product', 
   [
@@ -31,13 +32,17 @@ router.post(
   adminController.postAddProduct
 )
 
-// /admin/products => GET
+/**
+ * PRODUCT
+ */
 router.get('/products', isAuth, adminController.getProducts)
 
-// /admin/edit-product => GET
+
+/**
+ * EDIT PRODUCT
+ */
 router.get('/edit-product/:productId', isAuth, adminController.getEditProduct)
 
-// /admin/edit-product => POST
 router.post(
   '/edit-product',
   [
@@ -57,6 +62,9 @@ router.post(
   adminController.postEditProduct
 )
 
+/**
+ * DELETE PRODUCT
+ */
 router.delete('/product/:productId', isAuth, adminController.deleteProduct)
 
 module.exports = router
