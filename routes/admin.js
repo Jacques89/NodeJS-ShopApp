@@ -33,10 +33,9 @@ router.post(
 )
 
 /**
- * PRODUCT
+ * PRODUCTS
  */
 router.get('/products', isAuth, adminController.getProducts)
-
 
 /**
  * EDIT PRODUCT
