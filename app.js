@@ -1,6 +1,7 @@
 require('dotenv').config()
-const path = require('path')
 
+const path = require('path')
+const fs = require('fs')
 const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
@@ -9,6 +10,9 @@ const MongoDBStore = require('connect-mongodb-session')(session)
 const csrf = require('csurf')
 const flash = require('connect-flash')
 const multer = require('multer')
+const helmet = require('helmet')
+const compression = require('compression')
+const morgan = require('morgan')
 
 const errorController = require('./controllers/error')
 
@@ -49,6 +53,15 @@ app.set('view engine', 'ejs')
 const adminRoutes = require('./routes/admin')
 const shopRoutes = require('./routes/shop')
 const authRoutes = require('./routes/auth')
+
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, 'access.log'), 
+  { flags: 'a' }
+)
+
+app.use(helmet())
+app.use(compression())
+app.use(morgan('combined', { stream: accessLogStream }))
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(multer({ 
@@ -114,7 +127,7 @@ mongoose
     MONGODB_URI
   )
   .then(result => {
-    app.listen(3000)
+    app.listen(process.env.PORT || 3000)
   })
   .catch(err => {
     console.log(err)
